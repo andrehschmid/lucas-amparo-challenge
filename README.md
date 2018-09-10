@@ -4,7 +4,7 @@ Build an QT 5 (https://www.qt.io/) application that has a 3D viewer component.
 
 In that 3D viewer, the user must be able to select a geometry to render: a torus, a cylinder, a cuboid or a sphere, at any time.
 
-The 3D viewer camera must be controlled by commands published in a single ROS Topic, which will publish some information based on the keyboard input:
+The 3D viewer camera must be controlled by commands published in a single [ROS](http://www.ros.org/) Topic, which will publish some information based on the keyboard input:
 * Move up, down, left and right;
 * Rotate up, down, left and right;
 * Zoom in and out.
@@ -14,6 +14,8 @@ The user must be able to take a screen shot of that 3D view, that must be saved 
 
 The solution can be developed with Python or C++.
 Specially in the QT part, it must be implemented using QML (http://doc.qt.io/qt-5/qtqml-index.html) along with Python (https://www.qt.io/qt-for-python) or C++.
+
+The [ROS](http://www.ros.org/) version can be [Kinetic](http://wiki.ros.org/kinetic/Installation), [Lunar](http://wiki.ros.org/lunar/Installation) or [Melodic](http://wiki.ros.org/melodic/Installation).
 
 You must push your code regularly to this git repository.
 
