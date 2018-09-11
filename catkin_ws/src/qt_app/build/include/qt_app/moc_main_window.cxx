@@ -22,7 +22,7 @@ static const uint qt_meta_data_qt_app__MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -30,18 +30,17 @@ static const uint qt_meta_data_qt_app__MainWindow[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      20,   19,   19,   19, 0x0a,
-      53,   47,   19,   19, 0x0a,
-      91,   85,   19,   19, 0x0a,
-     137,   19,   19,   19, 0x0a,
+      26,   20,   19,   19, 0x0a,
+      64,   58,   19,   19, 0x0a,
+     110,   19,   19,   19, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_qt_app__MainWindow[] = {
-    "qt_app::MainWindow\0\0on_actionAbout_triggered()\0"
-    "check\0on_button_connect_clicked(bool)\0"
-    "state\0on_checkbox_use_environment_stateChanged(int)\0"
+    "qt_app::MainWindow\0\0check\0"
+    "on_button_connect_clicked(bool)\0state\0"
+    "on_checkbox_use_environment_stateChanged(int)\0"
     "updateLoggingView()\0"
 };
 
@@ -51,10 +50,9 @@ void qt_app::MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, i
         Q_ASSERT(staticMetaObject.cast(_o));
         MainWindow *_t = static_cast<MainWindow *>(_o);
         switch (_id) {
-        case 0: _t->on_actionAbout_triggered(); break;
-        case 1: _t->on_button_connect_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 2: _t->on_checkbox_use_environment_stateChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 3: _t->updateLoggingView(); break;
+        case 0: _t->on_button_connect_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 1: _t->on_checkbox_use_environment_stateChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 2: _t->updateLoggingView(); break;
         default: ;
         }
     }
@@ -92,9 +90,9 @@ int qt_app::MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 3;
     }
     return _id;
 }

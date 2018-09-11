@@ -35,7 +35,7 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
 
     ReadSettings();
 	setWindowIcon(QIcon(":/images/icon.png"));
-	ui.tab_manager->setCurrentIndex(0); // ensure the first tab is showing - qt-designer should have this already hardwired, but often loses it (settings?).
+    ui.tab_manager->setCurrentIndex(0);
     QObject::connect(&qnode, SIGNAL(rosShutdown()), this, SLOT(close()));
 
 	/*********************
@@ -105,14 +105,6 @@ void MainWindow::updateLoggingView() {
 }
 
 /*****************************************************************************
-** Implementation [Menu]
-*****************************************************************************/
-
-void MainWindow::on_actionAbout_triggered() {
-    QMessageBox::about(this, tr("About ..."),tr("<h2>PACKAGE_NAME Test Program 0.10</h2><p>Copyright Yujin Robot</p><p>This package needs an about description.</p>"));
-}
-
-/*****************************************************************************
 ** Implementation [Configuration]
 *****************************************************************************/
 
@@ -134,7 +126,6 @@ void MainWindow::ReadSettings() {
 void MainWindow::WriteSettings() {
     QSettings settings("Qt-Ros Package", "qt_app");
     settings.setValue("master_url",ui.line_edit_master->text());
-    //settings.setValue("topic_name",ui.line_edit_topic->text());
     settings.setValue("use_environment_variables",QVariant(ui.checkbox_use_environment->isChecked()));
     settings.setValue("geometry", saveGeometry());
     settings.setValue("windowState", saveState());

@@ -40,7 +40,7 @@
        <attribute name="title">
         <string>Ros Communications</string>
        </attribute>
-       <widget class="QGraphicsView" name="graphicsView">
+       <widget class="QGraphicsView" name="view_model">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -50,7 +50,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="lb_model">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -73,7 +73,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="lb_logging">
         <property name="geometry">
          <rect>
           <x>10</x>

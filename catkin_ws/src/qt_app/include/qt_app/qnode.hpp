@@ -22,6 +22,7 @@
 #include <ros/ros.h>
 #endif
 #include <string>
+#include <std_msgs/String.h>
 #include <QThread>
 #include <QStringListModel>
 
@@ -57,17 +58,18 @@ public:
 	 };
 
 	QStringListModel* loggingModel() { return &logging_model; }
-	void log( const LogLevel &level, const std::string &msg);
+        void log(const LogLevel &level, const std::string &msg);
+        void readMsg(const std_msgs::String &message_holder);
 
 Q_SIGNALS:
 	void loggingUpdated();
-    void rosShutdown();
+	void rosShutdown();
 
 private:
 	int init_argc;
 	char** init_argv;
-	ros::Publisher chatter_publisher;
-    QStringListModel logging_model;
+	ros::Subscriber chatter_subscriber;
+    	QStringListModel logging_model;
 };
 
 }  // namespace qt_app

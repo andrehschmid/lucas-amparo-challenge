@@ -117,6 +117,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/lucasamparo/lucas-amparo-challenge/catkin_ws/build/gtest/cmake_install.cmake")
+  include("/home/lucasamparo/lucas-amparo-challenge/catkin_ws/build/qt_publisher/cmake_install.cmake")
   include("/home/lucasamparo/lucas-amparo-challenge/catkin_ws/build/qt_app/cmake_install.cmake")
 
 endif()

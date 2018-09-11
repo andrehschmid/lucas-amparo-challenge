@@ -46,10 +46,10 @@ public:
     QHBoxLayout *hboxLayout;
     QTabWidget *tab_manager;
     QWidget *tab_status;
-    QGroupBox *groupBox_12;
+    QGraphicsView *view_model;
+    QLabel *lb_model;
     QListView *view_logging;
-    QGraphicsView *graphicsView;
-    QLabel *label_2;
+    QLabel *lb_logging;
     QStatusBar *statusbar;
     QDockWidget *dock_status;
     QWidget *dockWidgetContents_2;
@@ -94,23 +94,18 @@ public:
         tab_manager->setLocale(QLocale(QLocale::English, QLocale::Australia));
         tab_status = new QWidget();
         tab_status->setObjectName(QString::fromUtf8("tab_status"));
-        groupBox_12 = new QGroupBox(tab_status);
-        groupBox_12->setObjectName(QString::fromUtf8("groupBox_12"));
-        groupBox_12->setGeometry(QRect(9, 9, 585, 191));
-        QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(groupBox_12->sizePolicy().hasHeightForWidth());
-        groupBox_12->setSizePolicy(sizePolicy);
-        view_logging = new QListView(groupBox_12);
+        view_model = new QGraphicsView(tab_status);
+        view_model->setObjectName(QString::fromUtf8("view_model"));
+        view_model->setGeometry(QRect(10, 230, 571, 391));
+        lb_model = new QLabel(tab_status);
+        lb_model->setObjectName(QString::fromUtf8("lb_model"));
+        lb_model->setGeometry(QRect(10, 210, 67, 17));
+        view_logging = new QListView(tab_status);
         view_logging->setObjectName(QString::fromUtf8("view_logging"));
-        view_logging->setGeometry(QRect(12, 32, 561, 151));
-        graphicsView = new QGraphicsView(tab_status);
-        graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-        graphicsView->setGeometry(QRect(10, 230, 571, 391));
-        label_2 = new QLabel(tab_status);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(10, 210, 67, 17));
+        view_logging->setGeometry(QRect(10, 50, 571, 151));
+        lb_logging = new QLabel(tab_status);
+        lb_logging->setObjectName(QString::fromUtf8("lb_logging"));
+        lb_logging->setGeometry(QRect(10, 30, 67, 17));
         tab_manager->addTab(tab_status, QString());
 
         hboxLayout->addWidget(tab_manager);
@@ -121,11 +116,11 @@ public:
         MainWindowDesign->setStatusBar(statusbar);
         dock_status = new QDockWidget(MainWindowDesign);
         dock_status->setObjectName(QString::fromUtf8("dock_status"));
-        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(dock_status->sizePolicy().hasHeightForWidth());
-        dock_status->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(dock_status->sizePolicy().hasHeightForWidth());
+        dock_status->setSizePolicy(sizePolicy);
         dock_status->setMinimumSize(QSize(325, 389));
         dock_status->setAllowedAreas(Qt::RightDockWidgetArea);
         dockWidgetContents_2 = new QWidget();
@@ -134,8 +129,8 @@ public:
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         frame = new QFrame(dockWidgetContents_2);
         frame->setObjectName(QString::fromUtf8("frame"));
-        sizePolicy1.setHeightForWidth(frame->sizePolicy().hasHeightForWidth());
-        frame->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(frame->sizePolicy().hasHeightForWidth());
+        frame->setSizePolicy(sizePolicy);
         frame->setFrameShape(QFrame::StyledPanel);
         frame->setFrameShadow(QFrame::Raised);
         verticalLayout_3 = new QVBoxLayout(frame);
@@ -169,11 +164,11 @@ public:
         button_connect = new QPushButton(groupBox);
         button_connect->setObjectName(QString::fromUtf8("button_connect"));
         button_connect->setEnabled(true);
-        QSizePolicy sizePolicy2(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(button_connect->sizePolicy().hasHeightForWidth());
-        button_connect->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy1(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(button_connect->sizePolicy().hasHeightForWidth());
+        button_connect->setSizePolicy(sizePolicy1);
 
         gridLayout->addWidget(button_connect, 3, 1, 1, 1);
 
@@ -189,8 +184,8 @@ public:
 
         quit_button = new QPushButton(dockWidgetContents_2);
         quit_button->setObjectName(QString::fromUtf8("quit_button"));
-        sizePolicy2.setHeightForWidth(quit_button->sizePolicy().hasHeightForWidth());
-        quit_button->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(quit_button->sizePolicy().hasHeightForWidth());
+        quit_button->setSizePolicy(sizePolicy1);
 
         verticalLayout->addWidget(quit_button);
 
@@ -215,8 +210,8 @@ public:
         action_Preferences->setText(QApplication::translate("MainWindowDesign", "&Preferences", 0, QApplication::UnicodeUTF8));
         actionAbout->setText(QApplication::translate("MainWindowDesign", "&About", 0, QApplication::UnicodeUTF8));
         actionAbout_Qt->setText(QApplication::translate("MainWindowDesign", "About &Qt", 0, QApplication::UnicodeUTF8));
-        groupBox_12->setTitle(QApplication::translate("MainWindowDesign", "Logging", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("MainWindowDesign", "Model", 0, QApplication::UnicodeUTF8));
+        lb_model->setText(QApplication::translate("MainWindowDesign", "Model", 0, QApplication::UnicodeUTF8));
+        lb_logging->setText(QApplication::translate("MainWindowDesign", "Logging", 0, QApplication::UnicodeUTF8));
         tab_manager->setTabText(tab_manager->indexOf(tab_status), QApplication::translate("MainWindowDesign", "Ros Communications", 0, QApplication::UnicodeUTF8));
         dock_status->setWindowTitle(QApplication::translate("MainWindowDesign", "Command Panel", 0, QApplication::UnicodeUTF8));
         groupBox->setTitle(QApplication::translate("MainWindowDesign", "Ros Master", 0, QApplication::UnicodeUTF8));

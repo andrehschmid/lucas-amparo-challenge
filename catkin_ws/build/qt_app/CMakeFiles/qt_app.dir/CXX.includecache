@@ -31,6 +31,8 @@ ros/ros.h
 -
 string
 -
+std_msgs/String.h
+-
 QThread
 -
 QStringListModel

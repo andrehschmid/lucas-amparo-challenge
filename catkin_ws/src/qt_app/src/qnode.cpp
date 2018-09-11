@@ -53,7 +53,7 @@ QNode::QNode(int argc, char** argv ) :
 
 QNode::~QNode() {
     if(ros::isStarted()) {
-      ros::shutdown(); // explicitly needed since we use ros::start();
+      ros::shutdown();
       ros::waitForShutdown();
     }
 	wait();
@@ -67,10 +67,10 @@ bool QNode::init() {
 	if ( ! ros::master::check() ) {
 		return false;
 	}
-	ros::start(); // explicitly needed since our nodehandle is going out of scope.
+    ros::start();
 	ros::NodeHandle n;
 	// Add your ros communications here.
-	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
+    chatter_subscriber = n.subscribe("qt_app", 1000, &QNode::readMsg, this);
 	start();
 	return true;
 }
@@ -82,112 +82,22 @@ bool QNode::init(const std::string &master_url) {
 	if ( ! ros::master::check() ) {
 		return false;
 	}
-	ros::start(); // explicitly needed since our nodehandle is going out of scope.
+    ros::start();
 	ros::NodeHandle n;
 	// Add your ros communications here.
-	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
+    chatter_subscriber = n.subscribe("qt_app", 1000, &QNode::readMsg, this);
 	start();
 	return true;
 }
 
+void QNode::readMsg(const std_msgs::String &message_holder){
+    log(Info, message_holder.data);
+}
+
 void QNode::run() {
-	ros::Rate loop_rate(1);
-	int count = 0;
-
-    char c;
-    bool dirty = false;
-
-    // get the console in raw mode
-    tcgetattr(kfd, &cooked);
-    memcpy(&raw, &cooked, sizeof(struct termios));
-    raw.c_lflag &=~ (ICANON | ECHO);
-    // Setting a new line, then end of file
-    raw.c_cc[VEOL] = 1;
-    raw.c_cc[VEOF] = 2;
-    tcsetattr(kfd, TCSANOW, &raw);
-
-    puts("Reading from keyboard");
-    puts("---------------------------");
-    puts("Use arrow keys to translate model.");
-    puts("Use WASD keys to rotate model.");
-    puts("Use [1,4] keys to change model.");
-    puts("Use p key to take a snapshot.");
-
-    while ( ros::ok() || c == KEYCODE_Q) {
-        if(read(kfd, &c, 1) < 0){
-            perror("read():");
-            exit(-1);
-        }
-
-        std_msgs::String msg;
-        std::stringstream ss;
-
-        switch(c){
-            //Rotation
-            case KEYCODE_LEFT:
-                ss << "rotate left";
-                dirty = true;
-            break;
-            case KEYCODE_RIGHT:
-                ss << "rotate right";
-                dirty = true;
-            break;
-            case KEYCODE_UP:
-                ss << "rotate up";
-                dirty = true;
-            break;
-            case KEYCODE_DOWN:
-                ss << "rotate down";
-                dirty = true;
-            break;
-            //Translation
-            case KEYCODE_W:
-                ss << "translate up";
-                dirty = true;
-            break;
-            case KEYCODE_A:
-                ss << "translate left";
-                dirty = true;
-            break;
-            case KEYCODE_S:
-                ss << "translate down";
-                dirty = true;
-            break;
-            case KEYCODE_D:
-                ss << "translate right";
-                dirty = true;
-            break;
-            //Change Model
-            case KEYCODE_1:
-                ss << "model torus";
-                dirty = true;
-            break;
-            case KEYCODE_2:
-                ss << "model cylinder";
-                dirty = true;
-            break;
-            case KEYCODE_3:
-                ss << "model cuboid";
-                dirty = true;
-            break;
-            case KEYCODE_4:
-                ss << "model sphere";
-                dirty = true;
-            break;
-            //Snapshot
-            case KEYCODE_P:
-                ss << "snapshot";
-                dirty = true;
-        }
-        msg.data = ss.str();
-        if(dirty == true){
-            chatter_publisher.publish(msg);
-            log(Info,std::string("I sent: ")+msg.data);
-            dirty = false;
-        }
-	}
-	std::cout << "Ros shutdown, proceeding to close the gui." << std::endl;
-	Q_EMIT rosShutdown(); // used to signal the gui for a shutdown (useful to roslaunch)
+    ros::NodeHandle n;
+    chatter_subscriber = n.subscribe("qt_app", 1000, &QNode::readMsg, this);
+    ros::spin();
 }
 
 
