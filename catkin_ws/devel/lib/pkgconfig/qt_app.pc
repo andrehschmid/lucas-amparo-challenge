@@ -1,0 +1,8 @@
+prefix=/home/lucasamparo/lucas-amparo-challenge/catkin_ws/devel
+
+Name: qt_app
+Description: Description of qt_app
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/lucasamparo/lucas-amparo-challenge/catkin_ws/devel/lib 
+Requires: 
