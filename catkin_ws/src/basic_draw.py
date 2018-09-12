@@ -3,6 +3,8 @@
 import sys
 import math
 from PySide2 import QtCore, QtGui, QtWidgets, QtOpenGL
+import rospy
+from std_msgs.msg import String
 
 try:
     from OpenGL import GL
@@ -27,6 +29,7 @@ class Window(QtWidgets.QWidget):
         self.setLayout(mainLayout)
 		
         self.setWindowTitle(self.tr("Lucas Amparo :: Challenge"))
+        self.glWidget.listener()
 
 
 class GLWidget(QtOpenGL.QGLWidget):
@@ -46,6 +49,26 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         self.trolltechGreen = QtGui.QColor.fromCmykF(0.40, 0.0, 1.0, 0.0)
         self.trolltechPurple = QtGui.QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
+
+    def callback(self,data):
+        if(data.data == "torus"):
+                print("changing to torus")
+                self.object = self.torus()
+        if(data.data == "cuboid"):
+                print("changing to cuboid")
+                self.object = self.cuboid()
+        if(data.data == "sphere"):
+                print("changing to sphere")
+                self.object = self.sphere()
+        if(data.data == "cylinder"):
+                print("changing to cylinder")
+                self.object = self.sphere()
+
+    def listener(self):
+
+    	rospy.init_node('listener', anonymous=True)
+    	rospy.Subscriber('qt_app', String, self.callback)
+    	rospy.spin()
 
     def xRotation(self):
         return self.xRot

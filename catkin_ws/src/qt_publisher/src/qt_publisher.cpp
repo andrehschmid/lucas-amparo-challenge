@@ -18,6 +18,8 @@
 #define KEYCODE_S 0x73
 #define KEYCODE_D 0x64
 #define KEYCODE_P 0x70
+#define KEYCODE_Y 0x79
+#define KEYCODE_U 0x75
 #define KEYCODE_1 0x31
 #define KEYCODE_2 0x32
 #define KEYCODE_3 0x33
@@ -55,6 +57,7 @@ int main(int argc, char **argv){
     puts("Use WASD keys to rotate model.");
     puts("Use [1,4] keys to change model.");
     puts("Use p key to take a snapshot.");
+    puts("Use y/u keys to zoom in and out, respectively.");
     puts("Use q key to close the application.");
 
     while (c != KEYCODE_Q) {
@@ -118,14 +121,25 @@ int main(int argc, char **argv){
 	        ss << "model sphere";
 	        dirty = true;
 	    break;
+	    //Zoom
+	    case KEYCODE_Y:
+	        ss << "zoom in";
+	        dirty = true;
+	    break;
+	    case KEYCODE_U:
+		ss << "zoom out";
+		dirty = true;
+	    break;
 	    //Snapshot
 	    case KEYCODE_P:
 	        ss << "snapshot";
 	        dirty = true;
+	    break;
 	    //Exit
 	    case KEYCODE_Q:
 		ss << "exit";
 		dirty = true;
+	    break;
 	}
 
 	if(dirty == true){
@@ -137,6 +151,6 @@ int main(int argc, char **argv){
 	    dirty = false;
 	}
     }
-    std::cout << "Ros shutdown, proceeding to close the gui." << std::endl;
+    std::cout << "Ros shutdown" << std::endl;
     return 0;
 }

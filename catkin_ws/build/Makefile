@@ -490,19 +490,6 @@ qt_publisher/fast:
 	$(MAKE) -f qt_publisher/CMakeFiles/qt_publisher.dir/build.make qt_publisher/CMakeFiles/qt_publisher.dir/build
 .PHONY : qt_publisher/fast
 
-#=============================================================================
-# Target rules for targets named qt_app
-
-# Build rule for target.
-qt_app: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 qt_app
-.PHONY : qt_app
-
-# fast build rule for target.
-qt_app/fast:
-	$(MAKE) -f qt_app/CMakeFiles/qt_app.dir/build.make qt_app/CMakeFiles/qt_app.dir/build
-.PHONY : qt_app/fast
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -541,7 +528,6 @@ help:
 	@echo "... std_msgs_generate_messages_lisp"
 	@echo "... rosgraph_msgs_generate_messages_eus"
 	@echo "... qt_publisher"
-	@echo "... qt_app"
 .PHONY : help
 
 
