@@ -5,6 +5,7 @@ import math
 from PySide2 import QtCore, QtGui, QtWidgets, QtOpenGL
 import rospy
 from std_msgs.msg import String
+import threading
 
 try:
     from OpenGL import GL
@@ -29,7 +30,8 @@ class Window(QtWidgets.QWidget):
         self.setLayout(mainLayout)
 		
         self.setWindowTitle(self.tr("Lucas Amparo :: Challenge"))
-        self.glWidget.listener()
+        ros_thread = threading.Thread(target=self.glWidget.listener)
+        ros_thread.start()
 
 
 class GLWidget(QtOpenGL.QGLWidget):
@@ -51,7 +53,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.trolltechPurple = QtGui.QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
 
     def callback(self,data):
-        if(data.data == "torus"):
+        print(data.data)
+        '''if(data.data == "torus"):
                 print("changing to torus")
                 self.object = self.torus()
         if(data.data == "cuboid"):
@@ -62,11 +65,11 @@ class GLWidget(QtOpenGL.QGLWidget):
                 self.object = self.sphere()
         if(data.data == "cylinder"):
                 print("changing to cylinder")
-                self.object = self.sphere()
+                self.object = self.sphere()'''
 
     def listener(self):
-
-    	rospy.init_node('listener', anonymous=True)
+    	print("Starting qt_app listener")
+    	rospy.init_node('listener', anonymous=True, disable_signals=True)
     	rospy.Subscriber('qt_app', String, self.callback)
     	rospy.spin()
 
