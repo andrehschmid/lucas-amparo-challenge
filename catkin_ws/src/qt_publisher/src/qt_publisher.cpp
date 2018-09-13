@@ -17,6 +17,7 @@
 #define KEYCODE_A 0x61
 #define KEYCODE_S 0x73
 #define KEYCODE_D 0x64
+#define KEYCODE_R 0x72
 #define KEYCODE_P 0x70
 #define KEYCODE_Y 0x79
 #define KEYCODE_U 0x75
@@ -58,7 +59,7 @@ int main(int argc, char **argv){
     puts("Use [1,4] keys to change model.");
     puts("Use p key to take a snapshot.");
     puts("Use y/u keys to zoom in and out, respectively.");
-    puts("Use q key to close the application.");
+    puts("Use q key to close and r key to reset the application.");
 
     while (c != KEYCODE_Q) {
 	if(read(kfd, &c, 1) < 0){
@@ -134,6 +135,10 @@ int main(int argc, char **argv){
 	    case KEYCODE_P:
 	        ss << "snapshot";
 	        dirty = true;
+	    break;
+	    case KEYCODE_R:
+		ss << "reset";
+		dirty = true;
 	    break;
 	    //Exit
 	    case KEYCODE_Q:

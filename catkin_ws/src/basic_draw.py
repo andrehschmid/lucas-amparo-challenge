@@ -7,6 +7,7 @@ from PySide2.QtCore import Signal, Slot
 import rospy
 from std_msgs.msg import String
 import threading
+from datetime import datetime
 
 try:
     from OpenGL import GL
@@ -39,7 +40,6 @@ class Window(QtWidgets.QWidget):
 class GLWidget(QtOpenGL.QGLWidget):
     xRotationChanged = QtCore.Signal(int)
     yRotationChanged = QtCore.Signal(int)
-    zRotationChanged = QtCore.Signal(int)
     conn = QtCore.Signal(str)
 
     def __init__(self, parent=None):
@@ -49,6 +49,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.xRot = 0
         self.yRot = 0
         self.zRot = 0
+        self.xPos = 0
+        self.yPos = 0
+        self.zPos = -10
+        self.scale = 1
 
         self.lastPos = QtCore.QPoint()
 
@@ -62,41 +66,68 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     @Slot(str)
     def redraw(self, data):
-        update = False
         #Model Changing
         if("torus" in data):
                 print("changing to torus")
                 self.object = self.torus()
-                update = True
+                self.updateGL()
         if("cuboid" in data):
                 print("changing to cuboid")
                 self.object = self.cuboid()
-                update = True
+                self.updateGL()
         if("sphere" in data):
                 print("changing to sphere")
                 self.object = self.sphere()
-                update = True
+                self.updateGL()
         if("cylinder" in data):
                 print("changing to cylinder")
                 self.object = self.cylinder()
-                update = True
+                self.updateGL()
         if("rotate" in data):
-                update = False
+                grade = 30
 	        #Rotations
                 if("up" in data):
-                    print("Rotating 30 degrees on +Y direction")
-                    self.setXRotation(self.xRotation() - 480)
+                    print("Rotating {} degrees on +Y direction".format(grade))
+                    self.setXRotation(self.xRot - grade)
                 if("down" in data):
-                    print("Rotating 30 degrees on -Y direction")
-                    self.setXRotation(self.xRotation() + 480)
+                    print("Rotating {} degrees on -Y direction".format(grade))
+                    self.setXRotation(self.xRot + grade)
                 if("left" in data):
-                    print("Rotating 30 degrees on +X direction")
-                    self.setYRotation(self.yRotation() - 480)
+                    print("Rotating {} degrees on +X direction".format(grade))
+                    self.setYRotation(self.yRot - grade)
                 if("right" in data):
-                    print("Rotating 30 degrees on -X direction")
-                    self.setYRotation(self.yRotation() + 480)
-        if update:
-                self.updateGL()
+                    print("Rotating {} degrees on -X direction".format(grade))
+                    self.setYRotation(self.yRot + grade)
+        if("translate" in data):
+                step = 1
+	        #Rotations
+                if("up" in data):
+                    print("Translate {} step on +Y direction".format(step))
+                    self.setYTranslation(self.yPos + step/100)
+                if("down" in data):
+                    print("Translate {} step on -Y direction".format(step))
+                    self.setYTranslation(self.yPos - step/100)
+                if("left" in data):
+                    print("Translate {} step on +X direction".format(step))
+                    self.setXTranslation(self.xPos - step/100)
+                if("right" in data):
+                    print("Translate {} step on -X direction".format(step))
+                    self.setXTranslation(self.xPos + step/100)
+        if("zoom" in data):
+                if("in" in data):
+                    print("Zooming in the object")
+                    self.setScale(self.scale + 0.05)
+                if("out" in data):
+                    print("Zooming out the object")
+                    self.setScale(self.scale - 0.05)
+        if("reset" in data):
+                print("reseting view")
+                self.resetView()
+        if("snapshot" in data):
+                print("taking a snapshot")
+                self.snapshot(datetime.now().strftime("%Y-%m-%d.%H:%M:%S"))
+        if("exit" in data):
+                print("closing application")
 
     def callback(self,data):
         self.conn.emit(data.data)
@@ -107,20 +138,54 @@ class GLWidget(QtOpenGL.QGLWidget):
     	rospy.Subscriber('qt_app', String, self.callback)
     	rospy.spin()
 
-    def xRotation(self):
-        return self.xRot
-
-    def yRotation(self):
-        return self.yRot
-
-    def zRotation(self):
-        return self.zRot
-
     def minimumSizeHint(self):
         return QtCore.QSize(50, 50)
 
     def sizeHint(self):
         return QtCore.QSize(400, 400)
+
+    def snapshot(self, filename, fileformat='png'):
+        g = self.geometry()
+        fg = self.frameGeometry()
+        rfg = fg.translated(-g.left(),-g.top())
+        pixmap =  QtGui.QPixmap.grabWindow(self.winId(),rfg.left(), rfg.top(),rfg.width(), rfg.height())
+        pixmap.save(filename+"."+fileformat, fileformat)
+
+    def resetView(self):
+        self.xRot = 0
+        self.yRot = 0
+        self.zRot = 0
+        self.xPos = 0
+        self.yPos = 0
+        self.zPos = -10
+        self.scale = 1
+        self.updateGL()
+
+    def setScale(self, scale):
+        if(scale < 0.7):
+            scale = 0.7
+        if(scale > 1.3):
+            scale = 1.3
+        self.scale = scale
+        self.updateGL()
+
+    def setXTranslation(self, move):
+        if(move < -.25):
+            move = -.25
+        if(move > .25):
+            move = .25
+        if move != self.xPos:
+            self.xPos = move
+            self.updateGL()
+    
+    def setYTranslation(self, move):
+        if(move < -.25):
+            move = -.25
+        if(move > .25):
+            move = .25
+        if move != self.yPos:
+            self.yPos = move
+            self.updateGL()
 
     def setXRotation(self, angle):
         angle = self.normalizeAngle(angle)
@@ -134,13 +199,6 @@ class GLWidget(QtOpenGL.QGLWidget):
         if angle != self.yRot:
             self.yRot = angle
             self.emit(QtCore.SIGNAL("yRotationChanged(int)"), angle)
-            self.updateGL()
-
-    def setZRotation(self, angle):
-        angle = self.normalizeAngle(angle)
-        if angle != self.zRot:
-            self.zRot = angle
-            self.emit(QtCore.SIGNAL("zRotationChanged(int)"), angle)
             self.updateGL()
 
     def initializeGL(self):
@@ -330,10 +388,11 @@ class GLWidget(QtOpenGL.QGLWidget):
     def paintGL(self):
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glLoadIdentity()
-        GL.glTranslated(0.0, 0.0, -10.0)
-        GL.glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
-        GL.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
-        GL.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
+        GL.glScalef(self.scale,self.scale,self.scale)
+        GL.glTranslated(self.xPos, self.yPos, self.zPos)
+        GL.glRotated(self.xRot, 1.0, 0.0, 0.0)
+        GL.glRotated(self.yRot, 0.0, 1.0, 0.0)
+        GL.glRotated(self.zRot, 0.0, 0.0, 1.0)
         GL.glCallList(self.object)
 
     def resizeGL(self, width, height):
@@ -363,9 +422,9 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def normalizeAngle(self, angle):
         while angle < 0:
-            angle += 360 * 16
-        while angle > 360 * 16:
-            angle -= 360 * 16
+            angle += 360
+        while angle > 360:
+            angle -= 360
         return angle
 
     def freeResources(self):
