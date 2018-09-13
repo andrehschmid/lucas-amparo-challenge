@@ -404,22 +404,6 @@ class GLWidget(QtOpenGL.QGLWidget):
         GL.glOrtho(-0.5, +0.5, -0.5, +0.5, 4.0, 15.0)
         GL.glMatrixMode(GL.GL_MODELVIEW)
 
-    def mousePressEvent(self, event):
-        self.lastPos = QtCore.QPoint(event.pos())
-
-    def mouseMoveEvent(self, event):
-        dx = event.x() - self.lastPos.x()
-        dy = event.y() - self.lastPos.y()
-
-        if event.buttons() & QtCore.Qt.LeftButton:
-            self.setXRotation(self.xRot + 8 * dy)
-            self.setYRotation(self.yRot + 8 * dx)
-        elif event.buttons() & QtCore.Qt.RightButton:
-            self.setXRotation(self.xRot + 8 * dy)
-            self.setZRotation(self.zRot + 8 * dx)
-
-        self.lastPos = QtCore.QPoint(event.pos())
-
     def normalizeAngle(self, angle):
         while angle < 0:
             angle += 360
