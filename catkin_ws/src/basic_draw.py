@@ -3,6 +3,7 @@
 import sys
 import math
 from PySide2 import QtCore, QtGui, QtWidgets, QtOpenGL
+from PySide2.QtCore import Signal, Slot
 import rospy
 from std_msgs.msg import String
 import threading
@@ -30,14 +31,16 @@ class Window(QtWidgets.QWidget):
         self.setLayout(mainLayout)
 		
         self.setWindowTitle(self.tr("Lucas Amparo :: Challenge"))
-        ros_thread = threading.Thread(target=self.glWidget.listener)
-        ros_thread.start()
+        self.ros_thread = threading.Thread(target=self.glWidget.listener, name="listener")
+        self.glWidget.setListenerThread(self.ros_thread)
+        self.ros_thread.start()
 
 
 class GLWidget(QtOpenGL.QGLWidget):
     xRotationChanged = QtCore.Signal(int)
     yRotationChanged = QtCore.Signal(int)
     zRotationChanged = QtCore.Signal(int)
+    conn = QtCore.Signal(str)
 
     def __init__(self, parent=None):
         QtOpenGL.QGLWidget.__init__(self, parent)
@@ -49,23 +52,32 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         self.lastPos = QtCore.QPoint()
 
+        self.conn.connect(self.redraw)
+
         self.trolltechGreen = QtGui.QColor.fromCmykF(0.40, 0.0, 1.0, 0.0)
         self.trolltechPurple = QtGui.QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
 
-    def callback(self,data):
-        print(data.data)
-        '''if(data.data == "torus"):
+    def setListenerThread(self, thread):
+        self.listThread = thread
+
+    @Slot(str)
+    def redraw(self, data):
+        if("torus" in data):
                 print("changing to torus")
                 self.object = self.torus()
-        if(data.data == "cuboid"):
+        if("cuboid" in data):
                 print("changing to cuboid")
                 self.object = self.cuboid()
-        if(data.data == "sphere"):
+        if("sphere" in data):
                 print("changing to sphere")
                 self.object = self.sphere()
-        if(data.data == "cylinder"):
+        if("cylinder" in data):
                 print("changing to cylinder")
-                self.object = self.sphere()'''
+                self.object = self.cylinder()
+        self.updateGL()
+
+    def callback(self,data):
+        self.conn.emit(data.data)
 
     def listener(self):
     	print("Starting qt_app listener")
@@ -119,6 +131,7 @@ class GLWidget(QtOpenGL.QGLWidget):
     def sphere(self, r = .35, lats = 100, longs = 100):
         sphereList = GL.glGenLists( 1 )
         GL.glNewList( sphereList, GL.GL_COMPILE )
+        GL.glColor3f(1,1,1);
         for i in range(lats):
             lat0 = math.pi * (-0.5 + (i-1)/lats)
             z0 = math.sin(lat0)
@@ -233,6 +246,7 @@ class GLWidget(QtOpenGL.QGLWidget):
     def torus(self, rin = 0.07, rout = 0.2, sides = 100, rings = 20):
         torusList = GL.glGenLists( 1 )
         GL.glNewList( torusList, GL.GL_COMPILE )
+        GL.glColor3f(1,1,1);		
         
         #Drawing the torus
         rr = 1.5*rin
