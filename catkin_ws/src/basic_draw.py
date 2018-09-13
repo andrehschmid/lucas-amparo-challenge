@@ -62,19 +62,41 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     @Slot(str)
     def redraw(self, data):
+        update = False
+        #Model Changing
         if("torus" in data):
                 print("changing to torus")
                 self.object = self.torus()
+                update = True
         if("cuboid" in data):
                 print("changing to cuboid")
                 self.object = self.cuboid()
+                update = True
         if("sphere" in data):
                 print("changing to sphere")
                 self.object = self.sphere()
+                update = True
         if("cylinder" in data):
                 print("changing to cylinder")
                 self.object = self.cylinder()
-        self.updateGL()
+                update = True
+        if("rotate" in data):
+                update = False
+	        #Rotations
+                if("up" in data):
+                    print("Rotating 30 degrees on +Y direction")
+                    self.setXRotation(self.xRotation() - 480)
+                if("down" in data):
+                    print("Rotating 30 degrees on -Y direction")
+                    self.setXRotation(self.xRotation() + 480)
+                if("left" in data):
+                    print("Rotating 30 degrees on +X direction")
+                    self.setYRotation(self.yRotation() - 480)
+                if("right" in data):
+                    print("Rotating 30 degrees on -X direction")
+                    self.setYRotation(self.yRotation() + 480)
+        if update:
+                self.updateGL()
 
     def callback(self,data):
         self.conn.emit(data.data)
@@ -123,7 +145,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def initializeGL(self):
         self.qglClearColor(self.trolltechPurple.darker())
-        self.object = self.torus()
+        self.object = self.cuboid()
         GL.glShadeModel(GL.GL_FLAT)
         GL.glEnable(GL.GL_DEPTH_TEST)
         GL.glEnable(GL.GL_CULL_FACE)
@@ -146,8 +168,10 @@ class GLWidget(QtOpenGL.QGLWidget):
                 lng = 2 * math.pi * (j-1) / longs
                 x = math.cos(lng)
                 y = math.sin(lng)
-				
+
+                GL.glNormal3d(x * zr0 * r, y * zr0 * r, z0 * r)				
                 GL.glVertex3d(x * zr0 * r, y * zr0 * r, z0 * r)
+                GL.glNormal3d(x * zr1 * r, y * zr1 * r, z1 * r)
                 GL.glVertex3d(x * zr1 * r, y * zr1 * r, z1 * r)
             GL.glEnd()
         GL.glEndList()
@@ -159,39 +183,63 @@ class GLWidget(QtOpenGL.QGLWidget):
         GL.glBegin(GL.GL_QUADS);
 		
         GL.glColor3f(0,1,0);		
+        GL.glNormal3f( 1.0*side, 1.0*side,-1.0*side)
         GL.glVertex3f( 1.0*side, 1.0*side,-1.0*side)
+        GL.glNormal3f(-1.0*side, 1.0*side,-1.0*side)
         GL.glVertex3f(-1.0*side, 1.0*side,-1.0*side)
+        GL.glNormal3f(-1.0*side, 1.0*side, 1.0*side)
         GL.glVertex3f(-1.0*side, 1.0*side, 1.0*side)
+        GL.glNormal3f( 1.0*side, 1.0*side, 1.0*side)
         GL.glVertex3f( 1.0*side, 1.0*side, 1.0*side)
 
-        GL.glColor3f(1,0,0);				
+        GL.glColor3f(1,0,0);
+        GL.glNormal3f( 1.0*side,-1.0*side, 1.0*side)
         GL.glVertex3f( 1.0*side,-1.0*side, 1.0*side)
+        GL.glNormal3f(-1.0*side,-1.0*side, 1.0*side)
         GL.glVertex3f(-1.0*side,-1.0*side, 1.0*side)
+        GL.glNormal3f(-1.0*side,-1.0*side,-1.0*side)
         GL.glVertex3f(-1.0*side,-1.0*side,-1.0*side)
+        GL.glNormal3f( 1.0*side,-1.0*side,-1.0*side)
         GL.glVertex3f( 1.0*side,-1.0*side,-1.0*side)
 
         GL.glColor3f(0,0,1);		
+        GL.glNormal3f( 1.0*side, 1.0*side, 1.0*side)
         GL.glVertex3f( 1.0*side, 1.0*side, 1.0*side)
+        GL.glNormal3f(-1.0*side, 1.0*side, 1.0*side)
         GL.glVertex3f(-1.0*side, 1.0*side, 1.0*side)
+        GL.glNormal3f(-1.0*side,-1.0*side, 1.0*side)
         GL.glVertex3f(-1.0*side,-1.0*side, 1.0*side)
+        GL.glNormal3f( 1.0*side,-1.0*side, 1.0*side)
         GL.glVertex3f( 1.0*side,-1.0*side, 1.0*side)
 
-        GL.glColor3f(1,0,0);
+        GL.glColor3f(1,0,1);
+        GL.glNormal3f( 1.0*side,-1.0*side,-1.0*side)
         GL.glVertex3f( 1.0*side,-1.0*side,-1.0*side)
+        GL.glNormal3f(-1.0*side,-1.0*side,-1.0*side)
         GL.glVertex3f(-1.0*side,-1.0*side,-1.0*side)
+        GL.glNormal3f(-1.0*side, 1.0*side,-1.0*side)
         GL.glVertex3f(-1.0*side, 1.0*side,-1.0*side)
+        GL.glNormal3f( 1.0*side, 1.0*side,-1.0*side)
         GL.glVertex3f( 1.0*side, 1.0*side,-1.0*side)
 
-        GL.glColor3f(0,1,0);		
+        GL.glColor3f(1,1,0);		
+        GL.glNormal3f(-1.0*side, 1.0*side, 1.0*side)
         GL.glVertex3f(-1.0*side, 1.0*side, 1.0*side)
+        GL.glNormal3f(-1.0*side, 1.0*side,-1.0*side)
         GL.glVertex3f(-1.0*side, 1.0*side,-1.0*side)
+        GL.glNormal3f(-1.0*side,-1.0*side,-1.0*side)
         GL.glVertex3f(-1.0*side,-1.0*side,-1.0*side)
+        GL.glNormal3f(-1.0*side,-1.0*side, 1.0*side)
         GL.glVertex3f(-1.0*side,-1.0*side, 1.0*side)
 
-        GL.glColor3f(0,0,1);
+        GL.glColor3f(0,1,1);
+        GL.glNormal3f( 1.0*side, 1.0*side,-1.0*side)
         GL.glVertex3f( 1.0*side, 1.0*side,-1.0*side)
+        GL.glNormal3f( 1.0*side, 1.0*side, 1.0*side)
         GL.glVertex3f( 1.0*side, 1.0*side, 1.0*side)
+        GL.glNormal3f( 1.0*side,-1.0*side, 1.0*side)
         GL.glVertex3f( 1.0*side,-1.0*side, 1.0*side)
+        GL.glNormal3f( 1.0*side,-1.0*side,-1.0*side)
         GL.glVertex3f( 1.0*side,-1.0*side,-1.0*side)
 		
         GL.glEnd()
@@ -212,10 +260,14 @@ class GLWidget(QtOpenGL.QGLWidget):
         while(angle < 2*math.pi):
             x = radius * math.cos(angle)
             y = radius * math.sin(angle)
+            GL.glNormal3f(x,y,height/2)
             GL.glVertex3f(x,y,height/2)
+            GL.glNormal3f(x,y,-height/2)
             GL.glVertex3f(x,y,-height/2)
             angle += ang_step
+        GL.glNormal3f(radius, 0, height/2)
         GL.glVertex3f(radius, 0, height/2)
+        GL.glNormal3f(radius, 0, -height/2)
         GL.glVertex3f(radius, 0, -height/2)
         GL.glEnd()
 		
@@ -225,9 +277,11 @@ class GLWidget(QtOpenGL.QGLWidget):
         while(angle < 2*math.pi):
             x = radius * math.cos(angle)
             y = radius * math.sin(angle)
+            GL.glNormal3f(x,y,height/2)
             GL.glVertex3f(x,y,height/2)
             angle += ang_step
-        GL.glVertex3f(radius,0,height)
+        GL.glNormal3f(radius,0,height/2)
+        GL.glVertex3f(radius,0,height/2)
         GL.glEnd()
 		
         GL.glColor3f(0,1,0);
@@ -236,8 +290,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         while(angle < 2*math.pi):
             x = radius * math.cos(angle)
             y = radius * math.sin(angle)
+            GL.glNormal3f(x,y,-height/2)
             GL.glVertex3f(x,y,-height/2)
             angle += ang_step
+        GL.glNormal3f(radius,0,-height/2)
         GL.glVertex3f(radius,0,-height/2)
         GL.glEnd()
         GL.glEndList()
@@ -260,7 +316,9 @@ class GLWidget(QtOpenGL.QGLWidget):
             v = 0
             GL.glBegin(GL.GL_TRIANGLE_STRIP)
             while(v < 2*math.pi+dv):
+                GL.glNormal3d((rout+rr*math.cos(v))*math.cos(w),(rout+rr*math.cos(v))*math.sin(w),rin*math.sin(v))
                 GL.glVertex3d((rout+rr*math.cos(v))*math.cos(w),(rout+rr*math.cos(v))*math.sin(w),rin*math.sin(v))
+                GL.glNormal3d((rout+rr*math.cos(v+dv))*math.cos(w+dw),(rout+rr*math.cos(v+dv))*math.sin(w+dw),rin*math.sin(v+dv))
                 GL.glVertex3d((rout+rr*math.cos(v+dv))*math.cos(w+dw),(rout+rr*math.cos(v+dv))*math.sin(w+dw),rin*math.sin(v+dv))
                 v += dv
             GL.glEnd()
